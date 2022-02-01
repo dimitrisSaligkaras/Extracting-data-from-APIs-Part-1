@@ -64,6 +64,63 @@ print(response.content)
 file = open("goat.jpeg", "wb")
 file.write(response.content)
 file.close()
+#methods for changing the existing data source
+#most apis do not allow someone anything more than get the data
+#so for the other commands we expect a response code 405 which means that the api developer does not allow users
+#other actions
+print(requests.post("https://api.thedogapi.com/v1/breeds/1"))
+print(requests.get("https://api.thedogapi.com/v1/breeds/1"))
+print(requests.put("https://api.thedogapi.com/v1/breeds/1"))
+print(requests.delete("https://api.thedogapi.com/v1/breeds/1"))
+
+#QUERY PARAMETERS
+#parameters used to filter the data of our request
+#for example from a database which randomly generates information about both males and females we only wish to keep the females
+#in order to add a query parameter we need the ? symbol to be placed
+
+#we seek the content type
+response=requests.get("https://randomuser.me/api/")
+print(response.headers.get("Content-Type"))
+
+#it is json so
+#male or female
+print(requests.get("https://randomuser.me/api/").json())
+
+#we expect a female
+print(requests.get("https://randomuser.me/api/?gender=female").json())
+
+#if we want to add another  filter or an other query parameter we use the & symbol as shown below
+#let's suppose that we want only females which are fron Norway
+
+print(requests.get("https://randomuser.me/api/?gender=female&nat=no").json())
+
+#APIS THAT REQUIRE AUTHENTICATION
+
+#The most common level of authentication is the API key.
+# These keys are used to identify you as an API user or customer and to trace your use of the API.
+# API keys are typically sent as a request header or as a query parameter.
+
+endpoint = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
+# Replace DEMO_KEY below with your own key if you generated one.
+#this cases just demand a name for the api key so the user can be traced
+api_key = "DEMO_KEY"
+query_params = {"api_key": api_key, "earth_date": "2020-07-01"}
+response = requests.get(endpoint, params=query_params)
+print(response.json())
+
+#you can click on the link that shows up in the output window to see the related mars photo
+photos = response.json()["photos"]
+print(f"Found {len(photos)} photos")
+photos[4]["img_src"]
+
+#let's try a different date
+api_key = "DEMO_KEY"
+query_params = {"api_key": api_key, "earth_date": "2020-07-07"}
+response = requests.get(endpoint, params=query_params)
+print(response.json())
+photos = response.json()["photos"]
+print(f"Found {len(photos)} photos")
+photos[4]["img_src"]
 
 
 
